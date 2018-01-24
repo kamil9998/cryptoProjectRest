@@ -10,13 +10,15 @@ function tokenForUser(user) {
 exports.signin = function(req, res, next) {
   // User has already had their email and password auth'd
   // We just need to give them a token
-  res.send({ token: tokenForUser(req.user) });
+  console.log(req);
+  res.send({ token: tokenForUser(req.user), binancekey: req.user.binancekey, bitbaykey: req.user.bitbaykey });
 }
 
 exports.signup = function(req, res, next) {
   const email = req.body.email;
   const password = req.body.password;
   const binancekey = req.body.binancekey;
+  const bitbaykey = req.body.bitbaykey;
 
   if (!email || !password) {
     return res.status(422).send({ error: 'You must provide email and password'});
@@ -35,7 +37,8 @@ exports.signup = function(req, res, next) {
     const user = new User({
       email: email,
       password: password,
-      binancekey: binancekey
+      binancekey: binancekey,
+      bitbaykey: bitbaykey
     });
 
     user.save(function(err) {

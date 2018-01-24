@@ -6,7 +6,8 @@ const bcrypt = require('bcrypt-nodejs');
 const userSchema = new Schema({
   email: { type: String, unique: true, lowercase: true },
   password: String,
-  binancekey: String
+  binancekey: String,
+  bitbaykey: String
 });
 
 // On Save Hook, encrypt password
@@ -27,6 +28,7 @@ userSchema.pre('save', function(next) {
       user.password = hash;
       next();
     });
+
   });
 });
 

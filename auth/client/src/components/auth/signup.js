@@ -19,7 +19,11 @@ const FIELDS = {
   },
   binancekey: {
     type: 'input',
-    label: 'Binance Key'
+    label: 'Binance Secret Key'
+  },
+  bitbaykey: {
+    type: 'input',
+    label: 'Bitbay Key'
   }
 };
 
