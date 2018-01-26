@@ -10,8 +10,7 @@ function tokenForUser(user) {
 exports.signin = function(req, res, next) {
   // User has already had their email and password auth'd
   // We just need to give them a token
-  console.log(req);
-  res.send({ token: tokenForUser(req.user), binancekey: req.user.binancekey, bitbaykey: req.user.bitbaykey });
+  res.send({ token: tokenForUser(req.user), apikey: { binancekey: req.user.binancekey, bitbaykey: req.user.bitbaykey } });
 }
 
 exports.signup = function(req, res, next) {
@@ -41,11 +40,13 @@ exports.signup = function(req, res, next) {
       bitbaykey: bitbaykey
     });
 
+    console.log(user);
+
     user.save(function(err) {
       if (err) { return next(err); }
 
       // Repond to request indicating the user was created
-      res.json({ token: tokenForUser(user) });
+      res.json({ token: tokenForUser(user), apikey: { binancekey: user.binancekey, bitbaykey: user.bitbaykey } });
     });
   });
 }

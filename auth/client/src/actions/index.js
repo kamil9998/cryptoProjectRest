@@ -5,8 +5,7 @@ import {
   UNAUTH_USER,
   AUTH_ERROR,
   FETCH_MESSAGE,
-  FETCH_BINANCEKEY,
-  FETCH_BITBAYKEY
+  FETCH_APIKEY
 } from './types';
 
 const ROOT_URL = 'http://localhost:3090';
@@ -18,21 +17,19 @@ export function signinUser({ email, password }) {
       .then(response => {
         // If request is good...
         // - Update state to indicate user is authenticated
+        console.log(response.data.apikey);
+        dispatch({ 
+          type: FETCH_APIKEY,
+          payload: response.data.apikey
+        });
         dispatch({ type: AUTH_USER });
-        dispatch({ 
-          type: FETCH_BINANCEKEY,
-          payload: response.data.binancekey
-        });
-        dispatch({ 
-          type: FETCH_BITBAYKEY,
-          payload: response.data.bitbaykey
-        });
         // - Save the JWT token
         localStorage.setItem('token', response.data.token);
         // - redirect to the route '/feature'
         browserHistory.push('/feature');
       })
       .catch(() => {
+        console.log('error');
         // If request is bad...
         // - Show an error to the user
         dispatch(authError('Bad Login Info'));
@@ -40,11 +37,15 @@ export function signinUser({ email, password }) {
   }
 }
 
-export function signupUser({ email, password, binancekey }) {
-  console.log(binancekey);
+export function signupUser({ email, password, binancekey, bitbaykey }) {
   return function(dispatch) {
-    axios.post(`${ROOT_URL}/signup`, { email, password, binancekey })
+    axios.post(`${ROOT_URL}/signup`, { email, password, binancekey, bitbaykey })
       .then(response => {
+        
+        dispatch({ 
+          type: FETCH_APIKEY,
+          payload: response.data.apikey
+        });
         dispatch({ type: AUTH_USER });
         localStorage.setItem('token', response.data.token);
         browserHistory.push('/feature');
