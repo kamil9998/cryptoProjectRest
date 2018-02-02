@@ -28,16 +28,18 @@ const FIELDS = {
 };
 
 class Signup extends Component {
+  componentWillMount() {
+    this.props.clearAuthError();
+  }
+
   handleFormSubmit(formProps) {
-    // Call action creator to sign up the user!
     this.props.signupUser(formProps);
   }
 
   renderField(fieldConfig, field) {
     const fieldHelper = this.props.fields[field];
-
     return (
-      <div className={`form-group ${fieldHelper.touched && fieldHelper.invalid ? 'has-danger' : '' }`} >
+      <div key={fieldConfig.label} className={`form-group ${fieldHelper.touched && fieldHelper.invalid ? 'has-danger' : '' }`} >
         <label>{fieldConfig.label}</label>
         <fieldConfig.type type="text" className="form-control" {...fieldHelper} />
         <div className="error">

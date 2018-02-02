@@ -1,37 +1,31 @@
 import axios from 'axios';
 import { browserHistory } from 'react-router';
+import * as balanceHelpers from '../utils/balanceHelpers';
 import {
   AUTH_USER,
   UNAUTH_USER,
   AUTH_ERROR,
+  CLEAR_AUTH_ERROR,
   FETCH_MESSAGE,
-  FETCH_APIKEY
+  FETCH_APIKEY,
+  FETCH_BALANCE
 } from './types';
 
 const ROOT_URL = 'http://localhost:3090';
 
 export function signinUser({ email, password }) {
   return function(dispatch) {
-    // Submit email/password to the server
     axios.post(`${ROOT_URL}/signin`, { email, password })
       .then(response => {
-        // If request is good...
-        // - Update state to indicate user is authenticated
-        console.log(response.data.apikey);
         dispatch({ 
           type: FETCH_APIKEY,
           payload: response.data.apikey
         });
         dispatch({ type: AUTH_USER });
-        // - Save the JWT token
         localStorage.setItem('token', response.data.token);
-        // - redirect to the route '/feature'
-        browserHistory.push('/feature');
+        browserHistory.push('/balance');
       })
       .catch(() => {
-        console.log('error');
-        // If request is bad...
-        // - Show an error to the user
         dispatch(authError('Bad Login Info'));
       });
   }
@@ -61,6 +55,12 @@ export function authError(error) {
   };
 }
 
+export function clearAuthError() {
+  return {
+    type: CLEAR_AUTH_ERROR
+  };
+}
+
 export function signoutUser() {
   localStorage.removeItem('token');
 
@@ -80,3 +80,12 @@ export function fetchMessage() {
       });
   }
 }
+
+export function fetchBalance() {
+  return {
+    type: FETCH_BALANCE,
+    payload: 'dsa'
+  };
+}
+
+
